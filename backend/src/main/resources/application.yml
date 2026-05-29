@@ -1,0 +1,22 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: agrimind-backend
+  autoconfigure:
+    exclude:
+      # Temporary skeleton-stage setting. Remove this when database access is implemented.
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+mybatis-plus:
+  global-config:
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html

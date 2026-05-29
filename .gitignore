@@ -28,6 +28,8 @@ out/
 *.iml
 application-local.yml
 application-local.yaml
+application-dev.yml
+application-dev.yaml
 application-*.local.yml
 application-*.local.yaml
 
