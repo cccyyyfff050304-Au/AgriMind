@@ -17,3 +17,7 @@ spring:
       port: ${AGRIMIND_REDIS_PORT:6379}
       password: ${AGRIMIND_REDIS_PASSWORD:}
       database: ${AGRIMIND_REDIS_DATABASE:0}
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

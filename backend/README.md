@@ -43,7 +43,7 @@ Expected response:
 {
   "code": 200,
   "message": "success",
-  "data": "MySQL connection is ok"
+  "data": "Database connection is OK"
 }
 ```
 

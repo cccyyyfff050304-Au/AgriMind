@@ -3,11 +3,10 @@ package com.agrimind.system.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.dao.DataAccessResourceFailureException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.sql.DataSource;
-import java.sql.Connection;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,20 +20,28 @@ class DbPingControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private DataSource dataSource;
-
-    @MockitoBean
-    private Connection connection;
+    private JdbcTemplate jdbcTemplate;
 
     @Test
-    void pingShouldReturnSuccessWhenConnectionIsValid() throws Exception {
-        when(dataSource.getConnection()).thenReturn(connection);
-        when(connection.isValid(2)).thenReturn(true);
+    void pingShouldReturnSuccessWhenSelectOneSucceeds() throws Exception {
+        when(jdbcTemplate.queryForObject("SELECT 1", Integer.class)).thenReturn(1);
 
         mockMvc.perform(get("/api/db/ping"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
                 .andExpect(jsonPath("$.message").value("success"))
-                .andExpect(jsonPath("$.data").value("MySQL connection is ok"));
+                .andExpect(jsonPath("$.data").value("Database connection is OK"));
+    }
+
+    @Test
+    void pingShouldReturnClearMessageWhenDatabaseConnectionFails() throws Exception {
+        when(jdbcTemplate.queryForObject("SELECT 1", Integer.class))
+                .thenThrow(new DataAccessResourceFailureException("database unavailable"));
+
+        mockMvc.perform(get("/api/db/ping"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value(500))
+                .andExpect(jsonPath("$.message").value("Database connection failed: database unavailable"))
+                .andExpect(jsonPath("$.data").doesNotExist());
     }
 }
