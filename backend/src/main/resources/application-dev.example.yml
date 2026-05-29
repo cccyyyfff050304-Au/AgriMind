@@ -4,9 +4,13 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: ${AGRIMIND_DB_URL:jdbc:mysql://localhost:3306/agrimind?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    url: ${AGRIMIND_DB_URL:jdbc:mysql://localhost:3306/agri_mind?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
     username: ${AGRIMIND_DB_USERNAME:root}
     password: ${AGRIMIND_DB_PASSWORD:}
+    hikari:
+      pool-name: AgriMindHikariCP
+      maximum-pool-size: ${AGRIMIND_DB_POOL_MAX_SIZE:10}
+      minimum-idle: ${AGRIMIND_DB_POOL_MIN_IDLE:2}
   data:
     redis:
       host: ${AGRIMIND_REDIS_HOST:localhost}

@@ -4,14 +4,26 @@ server:
 spring:
   application:
     name: agrimind-backend
-  autoconfigure:
-    exclude:
-      # Temporary skeleton-stage setting. Remove this when database access is implemented.
-      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  profiles:
+    active: ${AGRIMIND_PROFILE:dev}
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: ${AGRIMIND_DB_URL:jdbc:mysql://localhost:3306/agri_mind?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true}
+    username: ${AGRIMIND_DB_USERNAME:root}
+    password: ${AGRIMIND_DB_PASSWORD:}
+    hikari:
+      pool-name: AgriMindHikariCP
+      maximum-pool-size: ${AGRIMIND_DB_POOL_MAX_SIZE:10}
+      minimum-idle: ${AGRIMIND_DB_POOL_MIN_IDLE:2}
 
 mybatis-plus:
+  mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
     banner: false
+    db-config:
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
   configuration:
     map-underscore-to-camel-case: true
 

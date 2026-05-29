@@ -21,10 +21,30 @@ cd D:\AgriMind\backend
 mvn spring-boot:run
 ```
 
+By default the project activates the `dev` profile. Create a local `src/main/resources/application-dev.yml` from the example file, or provide the same values through environment variables.
+
 ## Health Check
 
 ```powershell
 Invoke-RestMethod http://localhost:8080/api/health
+```
+
+## Database Ping
+
+After MySQL is running and `agri_mind` has been created, test the backend database connection:
+
+```powershell
+Invoke-RestMethod http://localhost:8080/api/db/ping
+```
+
+Expected response:
+
+```json
+{
+  "code": 200,
+  "message": "success",
+  "data": "MySQL connection is ok"
+}
 ```
 
 Expected response:
