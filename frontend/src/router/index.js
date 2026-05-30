@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { getToken } from '@/utils/token'
 
 const AdminLayout = () => import('@/layout/AdminLayout.vue')
 const LoginView = () => import('@/views/LoginView.vue')
@@ -25,6 +26,7 @@ const routes = [
   {
     path: '/',
     component: AdminLayout,
+    meta: { requiresAuth: true },
     children: [
       { path: 'dashboard', name: 'dashboard', component: DashboardView, meta: { title: 'Dashboard' } },
       { path: 'fields', name: 'fields', component: FieldsView, meta: { title: '地块管理' } },
@@ -42,6 +44,20 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to) => {
+  const hasToken = Boolean(getToken())
+  if (to.name === 'login' && hasToken) {
+    return '/dashboard'
+  }
+  if (to.meta.requiresAuth && !hasToken) {
+    return {
+      path: '/login',
+      query: { redirect: to.fullPath },
+    }
+  }
+  return true
 })
 
 export default router

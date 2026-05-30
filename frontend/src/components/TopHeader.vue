@@ -11,21 +11,28 @@
       <div class="user-chip">
         <el-avatar :size="32">A</el-avatar>
         <div>
-          <strong>{{ userStore.profile?.displayName }}</strong>
-          <span>{{ userStore.profile?.role }}</span>
+          <strong>{{ userStore.displayName }}</strong>
+          <span>{{ userStore.roleLabel }}</span>
         </div>
       </div>
+      <el-button :icon="SwitchButton" plain @click="logout">退出</el-button>
     </div>
   </header>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { Bell, Refresh } from '@element-plus/icons-vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Bell, Refresh, SwitchButton } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user'
 
 const route = useRoute()
+const router = useRouter()
 const userStore = useUserStore()
 const pageTitle = computed(() => route.meta.title || 'Dashboard')
+
+function logout() {
+  userStore.clearSession()
+  router.push('/login')
+}
 </script>

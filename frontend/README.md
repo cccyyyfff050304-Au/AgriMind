@@ -31,6 +31,14 @@ npm run dev
 http://localhost:5173/
 ```
 
+开发环境已在 `vite.config.js` 中配置代理：
+
+```text
+/api -> http://localhost:8080
+```
+
+因此前端请求 `/api/auth/login`、`/api/user/profile` 时会由 Vite 转发到本地后端，浏览器侧不需要额外 CORS 配置。
+
 ## 构建
 
 ```powershell
@@ -39,4 +47,4 @@ npm run build
 
 ## 当前说明
 
-第 8 阶段只初始化前端骨架和静态页面占位。当前页面使用 mock 数据，`src/api/http.js` 只提供 Axios 基础封装，尚未联调后端接口。
+第 9 阶段已完成登录联调：登录页调用后端 `/api/auth/login`，token 保存到 localStorage，Axios 请求自动携带 `Authorization: Bearer <token>`，Dashboard 调用 `/api/user/profile` 获取当前用户信息。业务模块页面仍使用演示数据，尚未联调地块、作物、土壤检测等 CRUD 接口。
