@@ -82,9 +82,6 @@ public class SoilRecordService {
 
     public PageResult<SoilRecordVO> page(Long currentUserId, SoilRecordPageQuery query) {
         validateTimeRange(query);
-        if (hasUnsupportedRiskLevel(query)) {
-            return emptyPage(query);
-        }
 
         List<FieldInfo> scopedFields = getScopedFields(currentUserId, query.getFieldId());
         if (scopedFields.isEmpty()) {
@@ -108,6 +105,7 @@ public class SoilRecordService {
         return Wrappers.<SoilTestRecord>lambdaQuery()
                 .in(SoilTestRecord::getFieldId, fieldIds)
                 .eq(query.getCropId() != null, SoilTestRecord::getCropId, query.getCropId())
+                .eq(StringUtils.hasText(query.getRiskLevel()), SoilTestRecord::getRiskLevel, query.getRiskLevel())
                 .ge(query.getStartTime() != null, SoilTestRecord::getSampleTime, query.getStartTime())
                 .le(query.getEndTime() != null, SoilTestRecord::getSampleTime, query.getEndTime())
                 .orderByDesc(SoilTestRecord::getSampleTime)
@@ -177,6 +175,7 @@ public class SoilRecordService {
         record.setConductivityUsCm(request.getConductivity());
         record.setTesterName(trimToNull(request.getTesterName()));
         record.setDataSource(defaultDataSource(request.getDataSource()));
+        record.setRiskLevel(SoilRecordVO.DEFAULT_RISK_LEVEL);
         record.setRemark(trimToNull(request.getRemark()));
     }
 
@@ -186,11 +185,6 @@ public class SoilRecordService {
                 && query.getStartTime().isAfter(query.getEndTime())) {
             throw new BusinessException(400, "开始时间不能晚于结束时间");
         }
-    }
-
-    private boolean hasUnsupportedRiskLevel(SoilRecordPageQuery query) {
-        String riskLevel = trimToNull(query.getRiskLevel());
-        return riskLevel != null && !SoilRecordVO.DEFAULT_RISK_LEVEL.equalsIgnoreCase(riskLevel);
     }
 
     private PageResult<SoilRecordVO> emptyPage(SoilRecordPageQuery query) {

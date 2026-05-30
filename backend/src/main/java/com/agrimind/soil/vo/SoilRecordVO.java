@@ -76,7 +76,7 @@ public class SoilRecordVO {
                 record.getConductivityUsCm(),
                 record.getTesterName(),
                 record.getDataSource(),
-                DEFAULT_RISK_LEVEL,
+                record.getRiskLevel() == null ? DEFAULT_RISK_LEVEL : record.getRiskLevel(),
                 record.getSampleTime(),
                 record.getRemark(),
                 record.getCreateTime(),

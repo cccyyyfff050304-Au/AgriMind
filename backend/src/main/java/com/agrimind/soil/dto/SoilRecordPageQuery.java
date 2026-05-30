@@ -2,6 +2,7 @@ package com.agrimind.soil.dto;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,6 +26,7 @@ public class SoilRecordPageQuery {
     private Long cropId;
 
     @Size(max = 30, message = "风险等级长度不能超过30个字符")
+    @Pattern(regexp = "UNKNOWN|LOW|MEDIUM|HIGH", message = "风险等级只能是 UNKNOWN、LOW、MEDIUM 或 HIGH")
     private String riskLevel;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)

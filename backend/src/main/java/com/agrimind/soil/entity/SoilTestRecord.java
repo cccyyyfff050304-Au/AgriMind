@@ -46,6 +46,8 @@ public class SoilTestRecord {
 
     private String dataSource;
 
+    private String riskLevel;
+
     private String remark;
 
     private LocalDateTime createTime;

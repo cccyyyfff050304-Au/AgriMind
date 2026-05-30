@@ -149,14 +149,21 @@ class SoilRecordServiceTest {
     }
 
     @Test
-    void pageShouldReturnEmptyForUnsupportedRiskLevel() {
+    void pageShouldFilterByRiskLevel() {
         SoilRecordPageQuery query = new SoilRecordPageQuery();
         query.setRiskLevel("HIGH");
+        SoilTestRecord record = record();
+        record.setRiskLevel("HIGH");
+        Page<SoilTestRecord> page = Page.of(1, 10, 1);
+        page.setRecords(List.of(record));
+        when(fieldInfoMapper.selectList(anyFieldWrapper())).thenReturn(List.of(field()));
+        when(soilTestRecordMapper.selectPage(anySoilPage(), anySoilWrapper())).thenReturn(page);
+        when(cropInfoMapper.selectByIds(anyCollection())).thenReturn(List.of(crop()));
 
         PageResult<SoilRecordVO> result = soilRecordService.page(CURRENT_USER_ID, query);
 
-        assertThat(result.getTotal()).isZero();
-        assertThat(result.getRecords()).isEmpty();
+        assertThat(result.getTotal()).isEqualTo(1);
+        assertThat(result.getRecords().get(0).getRiskLevel()).isEqualTo("HIGH");
     }
 
     @Test
