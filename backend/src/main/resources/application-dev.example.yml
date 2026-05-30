@@ -21,3 +21,8 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+agrimind:
+  jwt:
+    secret: ${AGRIMIND_JWT_SECRET:}
+    expiration-seconds: ${AGRIMIND_JWT_EXPIRATION_SECONDS:86400}

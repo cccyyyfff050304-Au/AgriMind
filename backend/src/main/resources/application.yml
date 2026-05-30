@@ -32,3 +32,8 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui.html
+
+agrimind:
+  jwt:
+    secret: ${AGRIMIND_JWT_SECRET:}
+    expiration-seconds: ${AGRIMIND_JWT_EXPIRATION_SECONDS:86400}

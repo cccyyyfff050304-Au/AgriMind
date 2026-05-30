@@ -57,6 +57,51 @@ Expected response:
 }
 ```
 
+## Authentication
+
+Configure a local JWT secret before testing auth endpoints. The secret must be at least 32 characters.
+
+```powershell
+$env:AGRIMIND_JWT_SECRET='replace-with-at-least-32-characters'
+$env:AGRIMIND_JWT_EXPIRATION_SECONDS='86400'
+```
+
+Register:
+
+```powershell
+$body = @{
+  username = 'demo_user'
+  password = 'demo123456'
+  realName = 'Demo User'
+} | ConvertTo-Json
+
+Invoke-RestMethod http://localhost:8080/api/auth/register `
+  -Method Post `
+  -ContentType 'application/json' `
+  -Body $body
+```
+
+Login:
+
+```powershell
+$body = @{
+  username = 'demo_user'
+  password = 'demo123456'
+} | ConvertTo-Json
+
+$login = Invoke-RestMethod http://localhost:8080/api/auth/login `
+  -Method Post `
+  -ContentType 'application/json' `
+  -Body $body
+```
+
+Current user:
+
+```powershell
+Invoke-RestMethod http://localhost:8080/api/user/profile `
+  -Headers @{ Authorization = "Bearer $($login.data.token)" }
+```
+
 ## API Docs
 
 After the service starts, open:
